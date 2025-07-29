@@ -1178,9 +1178,12 @@
                 return;
             }
             
+            // Sort by record date (newest first)
+            const sortedData = [...borrowRequests].sort((a, b) => new Date(b.recordDate) - new Date(a.recordDate));
+            
             const startIndex = (currentPage - 1) * itemsPerPage;
             const endIndex = startIndex + itemsPerPage;
-            const pageData = borrowRequests.slice(startIndex, endIndex);
+            const pageData = sortedData.slice(startIndex, endIndex);
             
             pageData.forEach(item => {
                 tbody.append(`
@@ -1207,7 +1210,7 @@
             });
             
             // Pagination
-            const totalPages = Math.ceil(borrowRequests.length / itemsPerPage);
+            const totalPages = Math.ceil(sortedData.length / itemsPerPage);
             if (totalPages > 1) {
                 for (let i = 1; i <= totalPages; i++) {
                     const activeClass = i === currentPage ? 'active' : '';
@@ -1346,9 +1349,12 @@
                 return;
             }
             
+            // Sort by record date (newest first)
+            const sortedData = [...loanContracts].sort((a, b) => new Date(b.recordDate) - new Date(a.recordDate));
+            
             const startIndex = (currentPage - 1) * itemsPerPage;
             const endIndex = startIndex + itemsPerPage;
-            const pageData = loanContracts.slice(startIndex, endIndex);
+            const pageData = sortedData.slice(startIndex, endIndex);
             
             pageData.forEach(item => {
                 tbody.append(`
@@ -1375,7 +1381,7 @@
             });
             
             // Pagination for loan contracts
-            const totalPages = Math.ceil(loanContracts.length / itemsPerPage);
+            const totalPages = Math.ceil(sortedData.length / itemsPerPage);
             if (totalPages > 1) {
                 for (let i = 1; i <= totalPages; i++) {
                     const activeClass = i === currentPage ? 'active' : '';
@@ -1542,9 +1548,12 @@
                 return;
             }
             
+            // Sort by record date (newest first)
+            const sortedData = [...repayments].sort((a, b) => new Date(b.recordDate) - new Date(a.recordDate));
+            
             const startIndex = (currentPage - 1) * itemsPerPage;
             const endIndex = startIndex + itemsPerPage;
-            const pageData = repayments.slice(startIndex, endIndex);
+            const pageData = sortedData.slice(startIndex, endIndex);
             
             pageData.forEach(item => {
                 tbody.append(`
@@ -1571,7 +1580,7 @@
             });
             
             // Pagination for repayments
-            const totalPages = Math.ceil(repayments.length / itemsPerPage);
+            const totalPages = Math.ceil(sortedData.length / itemsPerPage);
             if (totalPages > 1) {
                 for (let i = 1; i <= totalPages; i++) {
                     const activeClass = i === currentPage ? 'active' : '';
@@ -1992,5 +2001,5 @@
             }
         });
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'966e18e7e45d7993',t:'MTc1MzgwNzYzOC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'966e5cd2f13e2dc8',t:'MTc1MzgxMDQyMC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
