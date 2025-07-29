@@ -1,0 +1,1906 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ระบบสัญญายืมเงิน - โรงเรียนบ้านกิ่วพร้าว</title>
+    
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- SweetAlert2 -->
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
+    
+    <!-- Icons8 -->
+    <link rel="stylesheet" href="https://maxst.icons8.com/vue-static/landings/line-awesome/line-awesome/1.3.0/css/line-awesome.min.css">
+    
+    <style>
+        :root {
+            --primary-color: #DDD5F3;
+            --primary-dark: #C8B8E8;
+            --text-dark: #2d3748;
+            --text-light: #718096;
+            --border-color: #e2e8f0;
+            --success-color: #48bb78;
+            --danger-color: #f56565;
+            --warning-color: #ed8936;
+        }
+
+        * {
+            font-family: 'Sarabun', sans-serif;
+        }
+
+        h1, h2, h3, h4, h5, h6, .navbar-brand {
+            font-family: 'Kanit', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            min-height: 100vh;
+        }
+
+        .navbar {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+            box-shadow: 0 4px 20px rgba(221, 213, 243, 0.3);
+        }
+
+        .navbar-brand {
+            font-weight: 600;
+            color: var(--text-dark) !important;
+        }
+
+        .nav-link {
+            color: var(--text-dark) !important;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            border-radius: 8px;
+            margin: 0 4px;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            background: rgba(255, 255, 255, 0.2);
+            color: var(--text-dark) !important;
+        }
+
+        .main-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .card {
+            border: none;
+            border-radius: 16px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            margin-bottom: 24px;
+        }
+
+        .card-header {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+            border-radius: 16px 16px 0 0 !important;
+            border: none;
+            padding: 20px 24px;
+        }
+
+        .card-title {
+            color: var(--text-dark);
+            font-weight: 600;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+            border: none;
+            border-radius: 12px;
+            padding: 12px 24px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(221, 213, 243, 0.4);
+            background: linear-gradient(135deg, var(--primary-dark) 0%, #B8A5D9 100%);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, var(--success-color) 0%, #38a169 100%);
+            border: none;
+            border-radius: 12px;
+            padding: 8px 16px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .btn-warning {
+            background: linear-gradient(135deg, var(--warning-color) 0%, #dd6b20 100%);
+            border: none;
+            border-radius: 12px;
+            padding: 8px 16px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, var(--danger-color) 0%, #e53e3e 100%);
+            border: none;
+            border-radius: 12px;
+            padding: 8px 16px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .table {
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+        }
+
+        .table thead th {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+            color: var(--text-dark);
+            font-weight: 600;
+            border: none;
+            padding: 16px;
+        }
+
+        .table tbody td {
+            padding: 16px;
+            vertical-align: middle;
+            border-color: var(--border-color);
+        }
+
+        .table tbody tr:hover {
+            background: rgba(221, 213, 243, 0.1);
+        }
+
+        .modal-content {
+            border: none;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+        }
+
+        .modal-header {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+            border-radius: 20px 20px 0 0;
+            border: none;
+            padding: 24px;
+        }
+
+        .modal-title {
+            color: var(--text-dark);
+            font-weight: 600;
+        }
+
+        .form-control, .form-select {
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            padding: 12px 16px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus, .form-select:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 0.2rem rgba(221, 213, 243, 0.25);
+        }
+
+        .form-label {
+            font-weight: 500;
+            color: var(--text-dark);
+            margin-bottom: 8px;
+        }
+
+        .search-container {
+            background: white;
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 24px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+        }
+
+        .pagination {
+            justify-content: center;
+            margin-top: 24px;
+        }
+
+        .page-link {
+            border: none;
+            border-radius: 8px;
+            margin: 0 4px;
+            padding: 12px 16px;
+            color: var(--text-dark);
+            background: white;
+            transition: all 0.3s ease;
+        }
+
+        .page-link:hover, .page-item.active .page-link {
+            background: var(--primary-color);
+            color: var(--text-dark);
+        }
+
+        .badge {
+            padding: 8px 12px;
+            border-radius: 20px;
+            font-weight: 500;
+        }
+
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+
+        .loading-spinner {
+            width: 60px;
+            height: 60px;
+            border: 4px solid rgba(221, 213, 243, 0.3);
+            border-top: 4px solid var(--primary-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .school-logo {
+            width: 80px;
+            height: 80px;
+            object-fit: contain;
+            margin-right: 16px;
+        }
+
+        .error-text {
+            color: var(--danger-color);
+            font-size: 12px;
+            margin-top: 4px;
+        }
+
+        @media (max-width: 768px) {
+            .main-container {
+                padding: 12px;
+            }
+            
+            .card {
+                margin-bottom: 16px;
+            }
+            
+            .table-responsive {
+                font-size: 14px;
+            }
+            
+            .btn {
+                padding: 8px 12px;
+                font-size: 14px;
+            }
+            
+            .modal-dialog {
+                margin: 8px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-spinner"></div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg">
+        <div class="container-fluid">
+            <a class="navbar-brand d-flex align-items-center" href="#">
+                <img src="https://lh3.googleusercontent.com/d/1vQtWxoqhL4BWuOmDehWMGTqoRh63AThV" alt="โรงเรียนบ้านกิ่วพร้าว" class="school-logo">
+                <div>
+                    <div style="font-size: 1.2rem; font-weight: 600;">ระบบสัญญายืมเงิน</div>
+                    <div style="font-size: 0.9rem; opacity: 0.8;">โรงเรียนบ้านกิ่วพร้าว</div>
+                </div>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#" onclick="showTab('dashboard')">
+                            <i class="las la-tachometer-alt"></i> แดชบอร์ด
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" onclick="showTab('borrow-request')">
+                            <i class="las la-file-alt"></i> บันทึกขอยืม
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" onclick="showTab('loan-contract')">
+                            <i class="las la-handshake"></i> สัญญายืม
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" onclick="showTab('repayment')">
+                            <i class="las la-money-bill-wave"></i> บันทึกส่งใช้
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="main-container">
+        <!-- Dashboard Tab -->
+        <div id="dashboard-tab" class="tab-content">
+            <div class="row">
+                <div class="col-md-4 mb-4">
+                    <div class="card">
+                        <div class="card-body text-center">
+                            <i class="las la-file-alt" style="font-size: 3rem; color: var(--primary-color);"></i>
+                            <h5 class="card-title mt-3">บันทึกขอยืม</h5>
+                            <p class="card-text text-muted">รายการบันทึกขอยืมเงินทั้งหมด</p>
+                            <h3 class="text-primary" id="borrowRequestCount">0</h3>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <div class="card">
+                        <div class="card-body text-center">
+                            <i class="las la-handshake" style="font-size: 3rem; color: var(--success-color);"></i>
+                            <h5 class="card-title mt-3">สัญญายืม</h5>
+                            <p class="card-text text-muted">รายการสัญญายืมเงินทั้งหมด</p>
+                            <h3 class="text-success" id="loanContractCount">0</h3>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <div class="card">
+                        <div class="card-body text-center">
+                            <i class="las la-money-bill-wave" style="font-size: 3rem; color: var(--warning-color);"></i>
+                            <h5 class="card-title mt-3">บันทึกส่งใช้</h5>
+                            <p class="card-text text-muted">รายการส่งใช้เงินยืมทั้งหมด</p>
+                            <h3 class="text-warning" id="repaymentCount">0</h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Activities -->
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title">
+                        <i class="las la-clock"></i>
+                        กิจกรรมล่าสุด
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>วันที่</th>
+                                    <th>ประเภท</th>
+                                    <th>เลขที่</th>
+                                    <th>ผู้ยืม</th>
+                                    <th>จำนวนเงิน</th>
+                                    <th>สถานะ</th>
+                                    <th>การดำเนินการ</th>
+                                </tr>
+                            </thead>
+                            <tbody id="recentActivitiesTable">
+                                <tr>
+                                    <td colspan="7" class="text-center text-muted">ไม่มีข้อมูล</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Borrow Request Tab -->
+        <div id="borrow-request-tab" class="tab-content" style="display: none;">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="card-title">
+                        <i class="las la-file-alt"></i>
+                        บันทึกขอยืมเงิน
+                    </h5>
+                    <button class="btn btn-primary" onclick="openBorrowRequestModal()">
+                        <i class="las la-plus"></i>
+                        เพิ่มบันทึกขอยืม
+                    </button>
+                </div>
+                <div class="card-body">
+                    <!-- Search -->
+                    <div class="search-container">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <input type="text" class="form-control" id="searchBorrowRequest" placeholder="ค้นหา...">
+                            </div>
+                            <div class="col-md-3">
+                                <select class="form-select" id="filterBorrowYear">
+                                    <option value="">ทุกปีงบ</option>
+                                    <option value="2568">2568</option>
+                                    <option value="2569">2569</option>
+                                    <option value="2570">2570</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <select class="form-select" id="filterBorrowType">
+                                    <option value="">ทุกประเภท</option>
+                                    <option value="ค่าจัดการเรียนการสอน">ค่าจัดการเรียนการสอน</option>
+                                    <option value="ค่าเครื่องแบบนักเรียน">ค่าเครื่องแบบนักเรียน</option>
+                                    <option value="ค่าอุปกรณ์การเรียน">ค่าอุปกรณ์การเรียน</option>
+                                    <option value="ค่ากิจกรรมพัฒนาคุณภาพผู้เรียน">ค่ากิจกรรมพัฒนาคุณภาพผู้เรียน</option>
+                                </select>
+                            </div>
+                            <div class="col-md-2">
+                                <button class="btn btn-primary w-100" onclick="searchBorrowRequests()">
+                                    <i class="las la-search"></i>
+                                    ค้นหา
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Table -->
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>เลขที่ บย.</th>
+                                    <th>ปีงบ</th>
+                                    <th>วันที่บันทึก</th>
+                                    <th>ประเภท</th>
+                                    <th>ผู้ยืม</th>
+                                    <th>จำนวนเงิน</th>
+                                    <th>การดำเนินการ</th>
+                                </tr>
+                            </thead>
+                            <tbody id="borrowRequestTable">
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Pagination -->
+                    <nav>
+                        <ul class="pagination" id="borrowRequestPagination">
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+
+        <!-- Loan Contract Tab -->
+        <div id="loan-contract-tab" class="tab-content" style="display: none;">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="card-title">
+                        <i class="las la-handshake"></i>
+                        สัญญายืมเงิน
+                    </h5>
+                    <button class="btn btn-primary" onclick="openLoanContractModal()">
+                        <i class="las la-plus"></i>
+                        เพิ่มรายการสัญญายืม
+                    </button>
+                </div>
+                <div class="card-body">
+                    <!-- Search -->
+                    <div class="search-container">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <input type="text" class="form-control" id="searchLoanContract" placeholder="ค้นหา...">
+                            </div>
+                            <div class="col-md-3">
+                                <select class="form-select" id="filterLoanYear">
+                                    <option value="">ทุกปีงบ</option>
+                                    <option value="2568">2568</option>
+                                    <option value="2569">2569</option>
+                                    <option value="2570">2570</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <select class="form-select" id="filterLoanType">
+                                    <option value="">ทุกประเภท</option>
+                                    <option value="ค่าจัดการเรียนการสอน">ค่าจัดการเรียนการสอน</option>
+                                    <option value="ค่าเครื่องแบบนักเรียน">ค่าเครื่องแบบนักเรียน</option>
+                                    <option value="ค่าอุปกรณ์การเรียน">ค่าอุปกรณ์การเรียน</option>
+                                    <option value="ค่ากิจกรรมพัฒนาคุณภาพผู้เรียน">ค่ากิจกรรมพัฒนาคุณภาพผู้เรียน</option>
+                                </select>
+                            </div>
+                            <div class="col-md-2">
+                                <button class="btn btn-primary w-100" onclick="searchLoanContracts()">
+                                    <i class="las la-search"></i>
+                                    ค้นหา
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Table -->
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>เลขที่ บย.</th>
+                                    <th>ปีงบ</th>
+                                    <th>วันที่บันทึก</th>
+                                    <th>ผู้ยืม</th>
+                                    <th>จำนวนเงิน</th>
+                                    <th>ครบกำหนดส่ง</th>
+                                    <th>การดำเนินการ</th>
+                                </tr>
+                            </thead>
+                            <tbody id="loanContractTable">
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Pagination -->
+                    <nav>
+                        <ul class="pagination" id="loanContractPagination">
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+
+        <!-- Repayment Tab -->
+        <div id="repayment-tab" class="tab-content" style="display: none;">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="card-title">
+                        <i class="las la-money-bill-wave"></i>
+                        บันทึกส่งใช้เงินยืม
+                    </h5>
+                    <button class="btn btn-primary" onclick="openRepaymentModal()">
+                        <i class="las la-plus"></i>
+                        เพิ่มรายการส่งใช้
+                    </button>
+                </div>
+                <div class="card-body">
+                    <!-- Search -->
+                    <div class="search-container">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <input type="text" class="form-control" id="searchRepayment" placeholder="ค้นหา...">
+                            </div>
+                            <div class="col-md-3">
+                                <select class="form-select" id="filterRepaymentYear">
+                                    <option value="">ทุกปีงบ</option>
+                                    <option value="2568">2568</option>
+                                    <option value="2569">2569</option>
+                                    <option value="2570">2570</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <select class="form-select" id="filterRepaymentType">
+                                    <option value="">ทุกประเภท</option>
+                                    <option value="ใบสำคัญ">ใบสำคัญ</option>
+                                    <option value="ใบเสร็จรับเงิน">ใบเสร็จรับเงิน</option>
+                                    <option value="เงินสด">เงินสด</option>
+                                </select>
+                            </div>
+                            <div class="col-md-2">
+                                <button class="btn btn-primary w-100" onclick="searchRepayments()">
+                                    <i class="las la-search"></i>
+                                    ค้นหา
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Table -->
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>เลขที่ บค.</th>
+                                    <th>ปีงบ</th>
+                                    <th>วันที่บันทึก</th>
+                                    <th>ผู้ยืม</th>
+                                    <th>จำนวนเงินที่ส่งใช้</th>
+                                    <th>ประเภทส่งใช้</th>
+                                    <th>การดำเนินการ</th>
+                                </tr>
+                            </thead>
+                            <tbody id="repaymentTable">
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Pagination -->
+                    <nav>
+                        <ul class="pagination" id="repaymentPagination">
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Borrow Request Modal -->
+    <div class="modal fade" id="borrowRequestModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <i class="las la-file-alt"></i>
+                        <span id="borrowRequestModalTitle">เพิ่มบันทึกขอยืม</span>
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="borrowRequestForm">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label">เลขที่ บย. <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" name="borrowNumber" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label">ปีงบ <span class="text-danger">*</span></label>
+                                    <select class="form-select" name="fiscalYear" required>
+                                        <option value="">เลือกปีงบ</option>
+                                        <option value="2568">2568</option>
+                                        <option value="2569">2569</option>
+                                        <option value="2570">2570</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label">วันที่บันทึก <span class="text-danger">*</span></label>
+                                    <input type="date" class="form-control" name="recordDate" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label">ยืมประเภท <span class="text-danger">*</span></label>
+                                    <select class="form-select" name="borrowType" required>
+                                        <option value="">เลือกประเภท</option>
+                                        <option value="ค่าจัดการเรียนการสอน">ค่าจัดการเรียนการสอน</option>
+                                        <option value="ค่าเครื่องแบบนักเรียน">ค่าเครื่องแบบนักเรียน</option>
+                                        <option value="ค่าอุปกรณ์การเรียน">ค่าอุปกรณ์การเรียน</option>
+                                        <option value="ค่ากิจกรรมพัฒนาคุณภาพผู้เรียน">ค่ากิจกรรมพัฒนาคุณภาพผู้เรียน</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label">ผู้ยืม <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" name="borrower" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label">ตำแหน่ง <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" name="position" value="ครู" required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">เหตุผลในการยืม <span class="text-danger">*</span></label>
+                            <textarea class="form-control" name="reason" rows="3" required></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">โครงการ <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" name="project" required>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label">จำนวนเงิน <span class="text-danger">*</span></label>
+                                    <input type="number" class="form-control" name="amount" step="0.01" required onchange="convertToText(this.value, 'borrowAmountText')">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label">จำนวนเงิน (ตัวหนังสือ)</label>
+                                    <input type="text" class="form-control" name="amountText" id="borrowAmountText" readonly>
+                                </div>
+                            </div>
+                        </div>
+                        <input type="hidden" name="id">
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        <i class="las la-times"></i>
+                        ยกเลิก
+                    </button>
+                    <button type="button" class="btn btn-primary" onclick="saveBorrowRequest()">
+                        <img src="https://lh3.googleusercontent.com/d/1Zkhg9_l4xwrVcYWyzAL_IWUSVzkNlDyH" style="width: 16px; height: 16px;" alt="บันทึก">
+                        บันทึก
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loan Contract Modal -->
+    <div class="modal fade" id="loanContractModal" tabindex="-1">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <i class="las la-handshake"></i>
+                        <span id="loanContractModalTitle">เพิ่มรายการสัญญายืม</span>
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="loanContractForm">
+                        <!-- Select Borrow Request -->
+                        <div class="mb-4">
+                            <label class="form-label">เลือกรายการบันทึกขอยืม <span class="text-danger">*</span></label>
+                            <select class="form-select" name="borrowRequestId" required onchange="loadBorrowRequestData(this.value)">
+                                <option value="">เลือกรายการบันทึกขอยืม</option>
+                            </select>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label">เลขที่ บย.</label>
+                                    <input type="text" class="form-control" name="borrowNumber" readonly>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label">ปีงบ</label>
+                                    <input type="text" class="form-control" name="fiscalYear" readonly>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label">วันที่บันทึก</label>
+                                    <input type="date" class="form-control" name="recordDate">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label">ยืมประเภท</label>
+                                    <input type="text" class="form-control" name="borrowType" readonly>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label">ผู้ยืม</label>
+                                    <input type="text" class="form-control" name="borrower" readonly>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label">ตำแหน่ง</label>
+                                    <input type="text" class="form-control" name="position" readonly>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">เหตุผลในการยืม</label>
+                            <textarea class="form-control" name="reason" rows="2" readonly></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">โครงการ</label>
+                            <input type="text" class="form-control" name="project" readonly>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label">จำนวนเงิน</label>
+                                    <input type="number" class="form-control" name="amount" step="0.01" readonly>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label">จำนวนเงิน (ตัวหนังสือ)</label>
+                                    <input type="text" class="form-control" name="amountText" readonly>
+                                </div>
+                            </div>
+                        </div>
+
+                        <hr class="my-4">
+                        <h6 class="mb-3">ข้อมูลสัญญายืม</h6>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label">ครบกำหนดส่งวันที่ <span class="text-danger">*</span></label>
+                                    <input type="date" class="form-control" name="dueDate" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label">ภายในกี่วัน <span class="text-danger">*</span></label>
+                                    <input type="number" class="form-control" name="dueDays" required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label">ผู้อนุมัติ <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" name="approver" value="นางนรินภรณ์ อินมา" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label">วันที่อนุมัติ <span class="text-danger">*</span></label>
+                                    <input type="date" class="form-control" name="approvalDate" required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label">ผู้รับเงิน <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" name="recipient" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label">วันที่รับเงิน <span class="text-danger">*</span></label>
+                                    <input type="date" class="form-control" name="receiptDate" required>
+                                </div>
+                            </div>
+                        </div>
+                        <input type="hidden" name="id">
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        <i class="las la-times"></i>
+                        ยกเลิก
+                    </button>
+                    <button type="button" class="btn btn-primary" onclick="saveLoanContract()">
+                        <img src="https://lh3.googleusercontent.com/d/1Zkhg9_l4xwrVcYWyzAL_IWUSVzkNlDyH" style="width: 16px; height: 16px;" alt="บันทึก">
+                        บันทึก
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Repayment Modal -->
+    <div class="modal fade" id="repaymentModal" tabindex="-1">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <i class="las la-money-bill-wave"></i>
+                        <span id="repaymentModalTitle">เพิ่มรายการส่งใช้</span>
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="repaymentForm">
+                        <!-- Select Borrow Request -->
+                        <div class="mb-4">
+                            <label class="form-label">เลือกรายการบันทึกขอยืม <span class="text-danger">*</span></label>
+                            <select class="form-select" name="borrowRequestId" required onchange="loadBorrowRequestDataForRepayment(this.value)">
+                                <option value="">เลือกรายการบันทึกขอยืม</option>
+                            </select>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label">เลขที่ บค. <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" name="repaymentNumber" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label">ปีงบ</label>
+                                    <input type="text" class="form-control" name="fiscalYear" readonly>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label">วันที่บันทึก <span class="text-danger">*</span></label>
+                                    <input type="date" class="form-control" name="recordDate" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label">ยืมประเภท</label>
+                                    <input type="text" class="form-control" name="borrowType" readonly>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label">ผู้ยืม</label>
+                                    <input type="text" class="form-control" name="borrower" readonly>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label">ตำแหน่ง</label>
+                                    <input type="text" class="form-control" name="position" readonly>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">เหตุผลในการยืม</label>
+                            <textarea class="form-control" name="reason" rows="2" readonly></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">โครงการ</label>
+                            <input type="text" class="form-control" name="project" readonly>
+                        </div>
+
+                        <hr class="my-4">
+                        <h6 class="mb-3">ข้อมูลการส่งใช้</h6>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label">จำนวนเงินที่ส่งใช้ <span class="text-danger">*</span></label>
+                                    <input type="number" class="form-control" name="repaymentAmount" step="0.01" required onchange="convertToText(this.value, 'repaymentAmountText')">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label">จำนวนเงิน (ตัวหนังสือ)</label>
+                                    <input type="text" class="form-control" name="repaymentAmountText" id="repaymentAmountText" readonly>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label">ประเภทส่งใช้ <span class="text-danger">*</span></label>
+                                    <select class="form-select" name="repaymentType" required>
+                                        <option value="">เลือกประเภทส่งใช้</option>
+                                        <option value="ใบสำคัญ">ใบสำคัญ</option>
+                                        <option value="ใบเสร็จรับเงิน">ใบเสร็จรับเงิน</option>
+                                        <option value="เงินสด">เงินสด</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label">ครบกำหนดส่งวันที่ <span class="text-danger">*</span></label>
+                                    <input type="date" class="form-control" name="dueDate" required>
+                                </div>
+                            </div>
+                        </div>
+                        <input type="hidden" name="id">
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        <i class="las la-times"></i>
+                        ยกเลิก
+                    </button>
+                    <button type="button" class="btn btn-primary" onclick="saveRepayment()">
+                        <img src="https://lh3.googleusercontent.com/d/1Zkhg9_l4xwrVcYWyzAL_IWUSVzkNlDyH" style="width: 16px; height: 16px;" alt="บันทึก">
+                        บันทึก
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Detail Modal -->
+    <div class="modal fade" id="detailModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="detailModalTitle">รายละเอียด</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body" id="detailModalBody">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        <i class="las la-times"></i>
+                        ปิด
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.5/dist/jquery.validate.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script>
+        // Global variables
+        let borrowRequests = [];
+        let loanContracts = [];
+        let repayments = [];
+        let currentPage = 1;
+        let itemsPerPage = 10;
+        let currentTab = 'dashboard';
+
+        const API_URL = 'https://script.google.com/macros/s/AKfycbyrGIrjaiK_6-Rz4uZG117QLZCy_rJsCM2rj_-aqFhCzxQFq9Dbm4_RsuDtwPLAWQ1a/exec';
+
+        // Initialize
+        $(document).ready(function() {
+            loadAllData();
+            setupValidation();
+            
+            // Set today's date as default
+            const today = new Date().toISOString().split('T')[0];
+            $('input[type="date"]').val(today);
+        });
+
+        // Tab management
+        function showTab(tabName) {
+            // Hide all tabs
+            $('.tab-content').hide();
+            
+            // Show selected tab
+            $(`#${tabName}-tab`).show();
+            
+            // Update nav
+            $('.nav-link').removeClass('active');
+            $(`.nav-link[onclick="showTab('${tabName}')"]`).addClass('active');
+            
+            currentTab = tabName;
+            
+            // Load data for specific tab
+            switch(tabName) {
+                case 'dashboard':
+                    updateDashboard();
+                    break;
+                case 'borrow-request':
+                    displayBorrowRequests();
+                    break;
+                case 'loan-contract':
+                    displayLoanContracts();
+                    loadBorrowRequestOptions();
+                    break;
+                case 'repayment':
+                    displayRepayments();
+                    loadBorrowRequestOptionsForRepayment();
+                    break;
+            }
+        }
+
+        // Data loading
+        function loadAllData() {
+            showLoading();
+            
+            fetch(API_URL + '?action=getAll')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        borrowRequests = data.borrowRequests || [];
+                        loanContracts = data.loanContracts || [];
+                        repayments = data.repayments || [];
+                        
+                        updateDashboard();
+                        displayBorrowRequests();
+                    } else {
+                        showError('เกิดข้อผิดพลาดในการโหลดข้อมูล');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    showError('เกิดข้อผิดพลาดในการเชื่อมต่อ');
+                })
+                .finally(() => {
+                    hideLoading();
+                });
+        }
+
+        // Dashboard
+        function updateDashboard() {
+            $('#borrowRequestCount').text(borrowRequests.length);
+            $('#loanContractCount').text(loanContracts.length);
+            $('#repaymentCount').text(repayments.length);
+            
+            // Recent activities
+            const allActivities = [
+                ...borrowRequests.map(item => ({...item, type: 'บันทึกขอยืม', status: 'รอดำเนินการ'})),
+                ...loanContracts.map(item => ({...item, type: 'สัญญายืม', status: 'อนุมัติแล้ว'})),
+                ...repayments.map(item => ({...item, type: 'บันทึกส่งใช้', status: 'ส่งใช้แล้ว'}))
+            ].sort((a, b) => new Date(b.recordDate) - new Date(a.recordDate)).slice(0, 10);
+            
+            const tbody = $('#recentActivitiesTable');
+            tbody.empty();
+            
+            if (allActivities.length === 0) {
+                tbody.append('<tr><td colspan="7" class="text-center text-muted">ไม่มีข้อมูล</td></tr>');
+                return;
+            }
+            
+            allActivities.forEach(item => {
+                const statusClass = item.status === 'รอดำเนินการ' ? 'warning' : 
+                                  item.status === 'อนุมัติแล้ว' ? 'success' : 'info';
+                
+                tbody.append(`
+                    <tr>
+                        <td>${formatDate(item.recordDate)}</td>
+                        <td>${item.type}</td>
+                        <td>${item.borrowNumber || item.repaymentNumber || '-'}</td>
+                        <td>${item.borrower}</td>
+                        <td>${formatCurrency(item.amount || item.repaymentAmount)}</td>
+                        <td><span class="badge bg-${statusClass}">${item.status}</span></td>
+                        <td>
+                            <button class="btn btn-sm btn-primary" onclick="viewDetail('${item.type}', '${item.id}')">
+                                <img src="https://lh3.googleusercontent.com/d/13qxaLbH33ivpbfIfrBmylnxINq1oOLFl" style="width: 16px; height: 16px;" alt="ดู"> ดู
+                            </button>
+                        </td>
+                    </tr>
+                `);
+            });
+        }
+
+        // Borrow Request functions
+        function displayBorrowRequests() {
+            const tbody = $('#borrowRequestTable');
+            const pagination = $('#borrowRequestPagination');
+            
+            tbody.empty();
+            pagination.empty();
+            
+            if (borrowRequests.length === 0) {
+                tbody.append('<tr><td colspan="7" class="text-center text-muted">ไม่มีข้อมูล</td></tr>');
+                return;
+            }
+            
+            const startIndex = (currentPage - 1) * itemsPerPage;
+            const endIndex = startIndex + itemsPerPage;
+            const pageData = borrowRequests.slice(startIndex, endIndex);
+            
+            pageData.forEach(item => {
+                tbody.append(`
+                    <tr>
+                        <td>${item.borrowNumber}</td>
+                        <td>${item.fiscalYear}</td>
+                        <td>${formatDate(item.recordDate)}</td>
+                        <td>${item.borrowType}</td>
+                        <td>${item.borrower}</td>
+                        <td>${formatCurrency(item.amount)}</td>
+                        <td>
+                            <button class="btn btn-sm btn-primary me-1" onclick="viewDetail('บันทึกขอยืม', '${item.id}')">
+                                <img src="https://lh3.googleusercontent.com/d/13qxaLbH33ivpbfIfrBmylnxINq1oOLFl" style="width: 16px; height: 16px;" alt="ดู"> ดู
+                            </button>
+                            <button class="btn btn-sm btn-warning me-1" onclick="editBorrowRequest('${item.id}')">
+                                <img src="https://lh3.googleusercontent.com/d/1FDhV-L1Y2xA0ik_TOFo5k1MDn-VaYSLy" style="width: 16px; height: 16px;" alt="แก้ไข"> แก้ไข
+                            </button>
+                            <button class="btn btn-sm btn-danger" onclick="deleteBorrowRequest('${item.id}')">
+                                <img src="https://lh3.googleusercontent.com/d/1BF_5iwfRvYJ7QkUBIGWxoHk41ePRclri" style="width: 16px; height: 16px;" alt="ลบ"> ลบ
+                            </button>
+                        </td>
+                    </tr>
+                `);
+            });
+            
+            // Pagination
+            const totalPages = Math.ceil(borrowRequests.length / itemsPerPage);
+            if (totalPages > 1) {
+                for (let i = 1; i <= totalPages; i++) {
+                    const activeClass = i === currentPage ? 'active' : '';
+                    pagination.append(`
+                        <li class="page-item ${activeClass}">
+                            <a class="page-link" href="#" onclick="changePage(${i})">${i}</a>
+                        </li>
+                    `);
+                }
+            }
+        }
+
+        function openBorrowRequestModal(id = null) {
+            const modal = new bootstrap.Modal(document.getElementById('borrowRequestModal'));
+            const form = document.getElementById('borrowRequestForm');
+            
+            form.reset();
+            
+            if (id) {
+                const item = borrowRequests.find(r => r.id === id);
+                if (item) {
+                    Object.keys(item).forEach(key => {
+                        const input = form.querySelector(`[name="${key}"]`);
+                        if (input) input.value = item[key];
+                    });
+                    $('#borrowRequestModalTitle').text('แก้ไขบันทึกขอยืม');
+                }
+            } else {
+                $('#borrowRequestModalTitle').text('เพิ่มบันทึกขอยืม');
+            }
+            
+            modal.show();
+        }
+
+        function saveBorrowRequest() {
+            const form = document.getElementById('borrowRequestForm');
+            
+            if (!form.checkValidity()) {
+                form.reportValidity();
+                return;
+            }
+            
+            showLoading();
+            
+            const formData = new FormData(form);
+            const data = Object.fromEntries(formData.entries());
+            
+            // Generate ID if new
+            if (!data.id) {
+                data.id = 'BR' + Date.now();
+            }
+            
+            const params = new URLSearchParams();
+            params.append('action', 'saveBorrowRequest');
+            params.append('data', JSON.stringify(data));
+            
+            fetch(API_URL, {
+                method: 'POST',
+                body: params
+            })
+            .then(response => response.json())
+            .then(result => {
+                if (result.success) {
+                    showSuccess('บันทึกข้อมูลเรียบร้อยแล้ว');
+                    bootstrap.Modal.getInstance(document.getElementById('borrowRequestModal')).hide();
+                    loadAllData();
+                } else {
+                    showError('เกิดข้อผิดพลาดในการบันทึกข้อมูล');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showError('เกิดข้อผิดพลาดในการเชื่อมต่อ');
+            })
+            .finally(() => {
+                hideLoading();
+            });
+        }
+
+        function editBorrowRequest(id) {
+            openBorrowRequestModal(id);
+        }
+
+        function deleteBorrowRequest(id) {
+            Swal.fire({
+                title: 'ยืนยันการลบ',
+                text: 'คุณต้องการลบรายการนี้หรือไม่?',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'ลบ',
+                cancelButtonText: 'ยกเลิก'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    showLoading();
+                    
+                    const params = new URLSearchParams();
+                    params.append('action', 'deleteBorrowRequest');
+                    params.append('id', id);
+                    
+                    fetch(API_URL, {
+                        method: 'POST',
+                        body: params
+                    })
+                    .then(response => response.json())
+                    .then(result => {
+                        if (result.success) {
+                            showSuccess('ลบข้อมูลเรียบร้อยแล้ว');
+                            loadAllData();
+                        } else {
+                            showError('เกิดข้อผิดพลาดในการลบข้อมูล');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        showError('เกิดข้อผิดพลาดในการเชื่อมต่อ');
+                    })
+                    .finally(() => {
+                        hideLoading();
+                    });
+                }
+            });
+        }
+
+        // Loan Contract functions
+        function displayLoanContracts() {
+            const tbody = $('#loanContractTable');
+            const pagination = $('#loanContractPagination');
+            
+            tbody.empty();
+            pagination.empty();
+            
+            if (loanContracts.length === 0) {
+                tbody.append('<tr><td colspan="7" class="text-center text-muted">ไม่มีข้อมูล</td></tr>');
+                return;
+            }
+            
+            const startIndex = (currentPage - 1) * itemsPerPage;
+            const endIndex = startIndex + itemsPerPage;
+            const pageData = loanContracts.slice(startIndex, endIndex);
+            
+            pageData.forEach(item => {
+                tbody.append(`
+                    <tr>
+                        <td>${item.borrowNumber}</td>
+                        <td>${item.fiscalYear}</td>
+                        <td>${formatDate(item.recordDate)}</td>
+                        <td>${item.borrower}</td>
+                        <td>${formatCurrency(item.amount)}</td>
+                        <td>${formatDate(item.dueDate)}</td>
+                        <td>
+                            <button class="btn btn-sm btn-primary me-1" onclick="viewDetail('สัญญายืม', '${item.id}')">
+                                <img src="https://lh3.googleusercontent.com/d/13qxaLbH33ivpbfIfrBmylnxINq1oOLFl" style="width: 16px; height: 16px;" alt="ดู"> ดู
+                            </button>
+                            <button class="btn btn-sm btn-warning" onclick="editLoanContract('${item.id}')">
+                                <img src="https://lh3.googleusercontent.com/d/1FDhV-L1Y2xA0ik_TOFo5k1MDn-VaYSLy" style="width: 16px; height: 16px;" alt="แก้ไข"> แก้ไข
+                            </button>
+                        </td>
+                    </tr>
+                `);
+            });
+            
+            // Pagination for loan contracts
+            const totalPages = Math.ceil(loanContracts.length / itemsPerPage);
+            if (totalPages > 1) {
+                for (let i = 1; i <= totalPages; i++) {
+                    const activeClass = i === currentPage ? 'active' : '';
+                    pagination.append(`
+                        <li class="page-item ${activeClass}">
+                            <a class="page-link" href="#" onclick="changePage(${i})">${i}</a>
+                        </li>
+                    `);
+                }
+            }
+        }
+
+        function loadBorrowRequestOptions() {
+            const select = $('select[name="borrowRequestId"]');
+            select.empty().append('<option value="">เลือกรายการบันทึกขอยืม</option>');
+            
+            borrowRequests.forEach(item => {
+                select.append(`<option value="${item.id}">${item.borrowNumber} - ${item.borrower} (${formatCurrency(item.amount)})</option>`);
+            });
+        }
+
+        function loadBorrowRequestData(borrowRequestId) {
+            const borrowRequest = borrowRequests.find(r => r.id === borrowRequestId);
+            if (!borrowRequest) return;
+            
+            const form = document.getElementById('loanContractForm');
+            
+            // Fill form with borrow request data
+            Object.keys(borrowRequest).forEach(key => {
+                const input = form.querySelector(`[name="${key}"]`);
+                if (input && key !== 'id') {
+                    input.value = borrowRequest[key];
+                }
+            });
+            
+            // Set recipient as borrower by default
+            form.querySelector('[name="recipient"]').value = borrowRequest.borrower;
+        }
+
+        function openLoanContractModal(id = null) {
+            const modal = new bootstrap.Modal(document.getElementById('loanContractModal'));
+            const form = document.getElementById('loanContractForm');
+            
+            form.reset();
+            loadBorrowRequestOptions();
+            
+            if (id) {
+                const item = loanContracts.find(r => r.id === id);
+                if (item) {
+                    Object.keys(item).forEach(key => {
+                        const input = form.querySelector(`[name="${key}"]`);
+                        if (input) input.value = item[key];
+                    });
+                    $('#loanContractModalTitle').text('แก้ไขสัญญายืม');
+                }
+            } else {
+                $('#loanContractModalTitle').text('เพิ่มรายการสัญญายืม');
+            }
+            
+            modal.show();
+        }
+
+        function saveLoanContract() {
+            const form = document.getElementById('loanContractForm');
+            
+            if (!form.checkValidity()) {
+                form.reportValidity();
+                return;
+            }
+            
+            showLoading();
+            
+            const formData = new FormData(form);
+            const data = Object.fromEntries(formData.entries());
+            
+            // Generate ID if new
+            if (!data.id) {
+                data.id = 'LC' + Date.now();
+            }
+            
+            const params = new URLSearchParams();
+            params.append('action', 'saveLoanContract');
+            params.append('data', JSON.stringify(data));
+            
+            fetch(API_URL, {
+                method: 'POST',
+                body: params
+            })
+            .then(response => response.json())
+            .then(result => {
+                if (result.success) {
+                    showSuccess('บันทึกข้อมูลเรียบร้อยแล้ว');
+                    bootstrap.Modal.getInstance(document.getElementById('loanContractModal')).hide();
+                    loadAllData();
+                } else {
+                    showError('เกิดข้อผิดพลาดในการบันทึกข้อมูล');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showError('เกิดข้อผิดพลาดในการเชื่อมต่อ');
+            })
+            .finally(() => {
+                hideLoading();
+            });
+        }
+
+        function editLoanContract(id) {
+            openLoanContractModal(id);
+        }
+
+        // Repayment functions
+        function displayRepayments() {
+            const tbody = $('#repaymentTable');
+            const pagination = $('#repaymentPagination');
+            
+            tbody.empty();
+            pagination.empty();
+            
+            if (repayments.length === 0) {
+                tbody.append('<tr><td colspan="7" class="text-center text-muted">ไม่มีข้อมูล</td></tr>');
+                return;
+            }
+            
+            const startIndex = (currentPage - 1) * itemsPerPage;
+            const endIndex = startIndex + itemsPerPage;
+            const pageData = repayments.slice(startIndex, endIndex);
+            
+            pageData.forEach(item => {
+                tbody.append(`
+                    <tr>
+                        <td>${item.repaymentNumber}</td>
+                        <td>${item.fiscalYear}</td>
+                        <td>${formatDate(item.recordDate)}</td>
+                        <td>${item.borrower}</td>
+                        <td>${formatCurrency(item.repaymentAmount)}</td>
+                        <td>${item.repaymentType}</td>
+                        <td>
+                            <button class="btn btn-sm btn-primary me-1" onclick="viewDetail('บันทึกส่งใช้', '${item.id}')">
+                                <img src="https://lh3.googleusercontent.com/d/13qxaLbH33ivpbfIfrBmylnxINq1oOLFl" style="width: 16px; height: 16px;" alt="ดู"> ดู
+                            </button>
+                            <button class="btn btn-sm btn-warning" onclick="editRepayment('${item.id}')">
+                                <img src="https://lh3.googleusercontent.com/d/1FDhV-L1Y2xA0ik_TOFo5k1MDn-VaYSLy" style="width: 16px; height: 16px;" alt="แก้ไข"> แก้ไข
+                            </button>
+                        </td>
+                    </tr>
+                `);
+            });
+            
+            // Pagination for repayments
+            const totalPages = Math.ceil(repayments.length / itemsPerPage);
+            if (totalPages > 1) {
+                for (let i = 1; i <= totalPages; i++) {
+                    const activeClass = i === currentPage ? 'active' : '';
+                    pagination.append(`
+                        <li class="page-item ${activeClass}">
+                            <a class="page-link" href="#" onclick="changePage(${i})">${i}</a>
+                        </li>
+                    `);
+                }
+            }
+        }
+
+        function loadBorrowRequestOptionsForRepayment() {
+            const select = $('#repaymentModal select[name="borrowRequestId"]');
+            select.empty().append('<option value="">เลือกรายการบันทึกขอยืม</option>');
+            
+            borrowRequests.forEach(item => {
+                select.append(`<option value="${item.id}">${item.borrowNumber} - ${item.borrower} (${formatCurrency(item.amount)})</option>`);
+            });
+        }
+
+        function loadBorrowRequestDataForRepayment(borrowRequestId) {
+            const borrowRequest = borrowRequests.find(r => r.id === borrowRequestId);
+            if (!borrowRequest) return;
+            
+            const form = document.getElementById('repaymentForm');
+            
+            // Fill form with borrow request data
+            ['fiscalYear', 'borrowType', 'borrower', 'position', 'reason', 'project'].forEach(key => {
+                const input = form.querySelector(`[name="${key}"]`);
+                if (input) {
+                    input.value = borrowRequest[key];
+                }
+            });
+        }
+
+        function openRepaymentModal(id = null) {
+            const modal = new bootstrap.Modal(document.getElementById('repaymentModal'));
+            const form = document.getElementById('repaymentForm');
+            
+            form.reset();
+            loadBorrowRequestOptionsForRepayment();
+            
+            if (id) {
+                const item = repayments.find(r => r.id === id);
+                if (item) {
+                    Object.keys(item).forEach(key => {
+                        const input = form.querySelector(`[name="${key}"]`);
+                        if (input) input.value = item[key];
+                    });
+                    $('#repaymentModalTitle').text('แก้ไขรายการส่งใช้');
+                }
+            } else {
+                $('#repaymentModalTitle').text('เพิ่มรายการส่งใช้');
+            }
+            
+            modal.show();
+        }
+
+        function saveRepayment() {
+            const form = document.getElementById('repaymentForm');
+            
+            if (!form.checkValidity()) {
+                form.reportValidity();
+                return;
+            }
+            
+            showLoading();
+            
+            const formData = new FormData(form);
+            const data = Object.fromEntries(formData.entries());
+            
+            // Generate ID if new
+            if (!data.id) {
+                data.id = 'RP' + Date.now();
+            }
+            
+            const params = new URLSearchParams();
+            params.append('action', 'saveRepayment');
+            params.append('data', JSON.stringify(data));
+            
+            fetch(API_URL, {
+                method: 'POST',
+                body: params
+            })
+            .then(response => response.json())
+            .then(result => {
+                if (result.success) {
+                    showSuccess('บันทึกข้อมูลเรียบร้อยแล้ว');
+                    bootstrap.Modal.getInstance(document.getElementById('repaymentModal')).hide();
+                    loadAllData();
+                } else {
+                    showError('เกิดข้อผิดพลาดในการบันทึกข้อมูล');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showError('เกิดข้อผิดพลาดในการเชื่อมต่อ');
+            })
+            .finally(() => {
+                hideLoading();
+            });
+        }
+
+        function editRepayment(id) {
+            openRepaymentModal(id);
+        }
+
+        // Search functions
+        function searchBorrowRequests() {
+            const searchTerm = $('#searchBorrowRequest').val().toLowerCase();
+            const yearFilter = $('#filterBorrowYear').val();
+            const typeFilter = $('#filterBorrowType').val();
+            
+            let filtered = borrowRequests;
+            
+            if (searchTerm) {
+                filtered = filtered.filter(item => 
+                    item.borrowNumber.toLowerCase().includes(searchTerm) ||
+                    item.borrower.toLowerCase().includes(searchTerm) ||
+                    item.project.toLowerCase().includes(searchTerm)
+                );
+            }
+            
+            if (yearFilter) {
+                filtered = filtered.filter(item => item.fiscalYear === yearFilter);
+            }
+            
+            if (typeFilter) {
+                filtered = filtered.filter(item => item.borrowType === typeFilter);
+            }
+            
+            // Update display with filtered results
+            borrowRequests = filtered;
+            currentPage = 1;
+            displayBorrowRequests();
+        }
+
+        function searchLoanContracts() {
+            const searchTerm = $('#searchLoanContract').val().toLowerCase();
+            const yearFilter = $('#filterLoanYear').val();
+            const typeFilter = $('#filterLoanType').val();
+            
+            let filtered = loanContracts;
+            
+            if (searchTerm) {
+                filtered = filtered.filter(item => 
+                    item.borrowNumber.toLowerCase().includes(searchTerm) ||
+                    item.borrower.toLowerCase().includes(searchTerm) ||
+                    item.project.toLowerCase().includes(searchTerm)
+                );
+            }
+            
+            if (yearFilter) {
+                filtered = filtered.filter(item => item.fiscalYear === yearFilter);
+            }
+            
+            if (typeFilter) {
+                filtered = filtered.filter(item => item.borrowType === typeFilter);
+            }
+            
+            // Update display with filtered results
+            loanContracts = filtered;
+            currentPage = 1;
+            displayLoanContracts();
+        }
+
+        function searchRepayments() {
+            const searchTerm = $('#searchRepayment').val().toLowerCase();
+            const yearFilter = $('#filterRepaymentYear').val();
+            const typeFilter = $('#filterRepaymentType').val();
+            
+            let filtered = repayments;
+            
+            if (searchTerm) {
+                filtered = filtered.filter(item => 
+                    item.repaymentNumber.toLowerCase().includes(searchTerm) ||
+                    item.borrower.toLowerCase().includes(searchTerm) ||
+                    item.project.toLowerCase().includes(searchTerm)
+                );
+            }
+            
+            if (yearFilter) {
+                filtered = filtered.filter(item => item.fiscalYear === yearFilter);
+            }
+            
+            if (typeFilter) {
+                filtered = filtered.filter(item => item.repaymentType === typeFilter);
+            }
+            
+            // Update display with filtered results
+            repayments = filtered;
+            currentPage = 1;
+            displayRepayments();
+        }
+
+        // Detail view
+        function viewDetail(type, id) {
+            let item;
+            let title;
+            
+            switch(type) {
+                case 'บันทึกขอยืม':
+                    item = borrowRequests.find(r => r.id === id);
+                    title = 'รายละเอียดบันทึกขอยืม';
+                    break;
+                case 'สัญญายืม':
+                    item = loanContracts.find(r => r.id === id);
+                    title = 'รายละเอียดสัญญายืม';
+                    break;
+                case 'บันทึกส่งใช้':
+                    item = repayments.find(r => r.id === id);
+                    title = 'รายละเอียดบันทึกส่งใช้';
+                    break;
+            }
+            
+            if (!item) return;
+            
+            $('#detailModalTitle').text(title);
+            
+            let content = '<div class="row">';
+            
+            // Basic info
+            if (item.borrowNumber) content += `<div class="col-md-6 mb-3"><strong>เลขที่ บย.:</strong> ${item.borrowNumber}</div>`;
+            if (item.repaymentNumber) content += `<div class="col-md-6 mb-3"><strong>เลขที่ บค.:</strong> ${item.repaymentNumber}</div>`;
+            if (item.fiscalYear) content += `<div class="col-md-6 mb-3"><strong>ปีงบ:</strong> ${item.fiscalYear}</div>`;
+            if (item.recordDate) content += `<div class="col-md-6 mb-3"><strong>วันที่บันทึก:</strong> ${formatDate(item.recordDate)}</div>`;
+            if (item.borrowType) content += `<div class="col-md-6 mb-3"><strong>ประเภท:</strong> ${item.borrowType}</div>`;
+            if (item.borrower) content += `<div class="col-md-6 mb-3"><strong>ผู้ยืม:</strong> ${item.borrower}</div>`;
+            if (item.position) content += `<div class="col-md-6 mb-3"><strong>ตำแหน่ง:</strong> ${item.position}</div>`;
+            if (item.reason) content += `<div class="col-12 mb-3"><strong>เหตุผลในการยืม:</strong><br>${item.reason}</div>`;
+            if (item.project) content += `<div class="col-12 mb-3"><strong>โครงการ:</strong> ${item.project}</div>`;
+            if (item.amount) content += `<div class="col-md-6 mb-3"><strong>จำนวนเงิน:</strong> ${formatCurrency(item.amount)}</div>`;
+            if (item.amountText) content += `<div class="col-md-6 mb-3"><strong>จำนวนเงิน (ตัวหนังสือ):</strong> ${item.amountText}</div>`;
+            
+            // Loan contract specific
+            if (item.dueDate) content += `<div class="col-md-6 mb-3"><strong>ครบกำหนดส่ง:</strong> ${formatDate(item.dueDate)}</div>`;
+            if (item.dueDays) content += `<div class="col-md-6 mb-3"><strong>ภายในกี่วัน:</strong> ${item.dueDays} วัน</div>`;
+            if (item.approver) content += `<div class="col-md-6 mb-3"><strong>ผู้อนุมัติ:</strong> ${item.approver}</div>`;
+            if (item.approvalDate) content += `<div class="col-md-6 mb-3"><strong>วันที่อนุมัติ:</strong> ${formatDate(item.approvalDate)}</div>`;
+            if (item.recipient) content += `<div class="col-md-6 mb-3"><strong>ผู้รับเงิน:</strong> ${item.recipient}</div>`;
+            if (item.receiptDate) content += `<div class="col-md-6 mb-3"><strong>วันที่รับเงิน:</strong> ${formatDate(item.receiptDate)}</div>`;
+            
+            // Repayment specific
+            if (item.repaymentAmount) content += `<div class="col-md-6 mb-3"><strong>จำนวนเงินที่ส่งใช้:</strong> ${formatCurrency(item.repaymentAmount)}</div>`;
+            if (item.repaymentAmountText) content += `<div class="col-md-6 mb-3"><strong>จำนวนเงิน (ตัวหนังสือ):</strong> ${item.repaymentAmountText}</div>`;
+            if (item.repaymentType) content += `<div class="col-md-6 mb-3"><strong>ประเภทส่งใช้:</strong> ${item.repaymentType}</div>`;
+            
+            content += '</div>';
+            
+            $('#detailModalBody').html(content);
+            
+            const modal = new bootstrap.Modal(document.getElementById('detailModal'));
+            modal.show();
+        }
+
+        // Utility functions
+        function changePage(page) {
+            currentPage = page;
+            
+            switch(currentTab) {
+                case 'borrow-request':
+                    displayBorrowRequests();
+                    break;
+                case 'loan-contract':
+                    displayLoanContracts();
+                    break;
+                case 'repayment':
+                    displayRepayments();
+                    break;
+            }
+        }
+
+        function formatDate(dateString) {
+            if (!dateString) return '-';
+            const date = new Date(dateString);
+            return date.toLocaleDateString('th-TH');
+        }
+
+        function formatCurrency(amount) {
+            if (!amount) return '-';
+            return new Intl.NumberFormat('th-TH', {
+                style: 'currency',
+                currency: 'THB'
+            }).format(amount);
+        }
+
+        function convertToText(amount, targetId) {
+            if (!amount) {
+                document.getElementById(targetId).value = '';
+                return;
+            }
+            
+            const ones = ['', 'หนึ่ง', 'สอง', 'สาม', 'สี่', 'ห้า', 'หก', 'เจ็ด', 'แปด', 'เก้า'];
+            const tens = ['', 'สิบ', 'ยี่สิบ', 'สามสิบ', 'สี่สิบ', 'ห้าสิบ', 'หกสิบ', 'เจ็ดสิบ', 'แปดสิบ', 'เก้าสิบ'];
+            const units = ['', 'สิบ', 'ร้อย', 'พัน', 'หมื่น', 'แสน', 'ล้าน'];
+            
+            function numberToThai(num) {
+                if (num === 0) return 'ศูนย์';
+                
+                let result = '';
+                let numStr = num.toString();
+                let len = numStr.length;
+                
+                for (let i = 0; i < len; i++) {
+                    let digit = parseInt(numStr[i]);
+                    let position = len - i - 1;
+                    
+                    if (digit === 0) continue;
+                    
+                    // Special cases
+                    if (position === 1 && digit === 1 && len > 1) {
+                        result += 'สิบ';
+                    } else if (position === 1 && digit === 2) {
+                        result += 'ยี่สิบ';
+                    } else if (position === 0 && digit === 1 && len > 1 && parseInt(numStr[len-2]) > 0) {
+                        result += 'เอ็ด';
+                    } else {
+                        result += ones[digit];
+                        if (position > 0) {
+                            result += units[position];
+                        }
+                    }
+                }
+                
+                return result;
+            }
+            
+            const text = numberToThai(parseInt(amount)) + 'บาทถ้วน';
+            document.getElementById(targetId).value = text;
+        }
+
+        function setupValidation() {
+            // jQuery Validation setup
+            $.validator.setDefaults({
+                errorClass: 'error-text',
+                highlight: function(element) {
+                    $(element).addClass('is-invalid');
+                },
+                unhighlight: function(element) {
+                    $(element).removeClass('is-invalid');
+                }
+            });
+        }
+
+        function showLoading() {
+            $('#loadingOverlay').show();
+        }
+
+        function hideLoading() {
+            $('#loadingOverlay').hide();
+        }
+
+        function showSuccess(message) {
+            Swal.fire({
+                icon: 'success',
+                title: 'สำเร็จ',
+                text: message,
+                confirmButtonColor: '#48bb78'
+            });
+        }
+
+        function showError(message) {
+            Swal.fire({
+                icon: 'error',
+                title: 'เกิดข้อผิดพลาด',
+                text: message,
+                confirmButtonColor: '#f56565'
+            });
+        }
+
+        // Close modal when clicking outside
+        $(document).on('click', '.modal', function(e) {
+            if (e.target === this) {
+                $(this).modal('hide');
+            }
+        });
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'966de65e34ad2dd0',t:'MTc1MzgwNTU2OC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
