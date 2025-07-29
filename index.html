@@ -1308,7 +1308,7 @@
                     const params = new URLSearchParams();
                     params.append('action', 'deleteBorrowRequest');
                     params.append('id', id);
-                    
+
                     fetch(API_URL, {
                         method: 'POST',
                         body: params
@@ -1317,9 +1317,9 @@
                     .then(result => {
                         if (result.success) {
                             showSuccess('ลบข้อมูลเรียบร้อยแล้ว');
-                            loadAllData();
+                            loadAllData(); // โหลดข้อมูลใหม่ทั้งหมดหลังจากลบสำเร็จ
                         } else {
-                            showError('เกิดข้อผิดพลาดในการลบข้อมูล');
+                            showError('เกิดข้อผิดพลาดในการลบข้อมูล: ' + (result.message || ''));
                         }
                     })
                     .catch(error => {
@@ -1363,8 +1363,11 @@
                             <button class="btn btn-sm btn-primary me-1" onclick="viewDetail('สัญญายืม', '${item.id}')">
                                 <img src="https://lh3.googleusercontent.com/d/13qxaLbH33ivpbfIfrBmylnxINq1oOLFl" style="width: 16px; height: 16px;" alt="ดู"> ดู
                             </button>
-                            <button class="btn btn-sm btn-warning" onclick="editLoanContract('${item.id}')">
+                            <button class="btn btn-sm btn-warning me-1" onclick="editLoanContract('${item.id}')">
                                 <img src="https://lh3.googleusercontent.com/d/1FDhV-L1Y2xA0ik_TOFo5k1MDn-VaYSLy" style="width: 16px; height: 16px;" alt="แก้ไข"> แก้ไข
+                            </button>
+                            <button class="btn btn-sm btn-danger" onclick="deleteLoanContract('${item.id}')">
+                                <img src="https://lh3.googleusercontent.com/d/1BF_5iwfRvYJ7QkUBIGWxoHk41ePRclri" style="width: 16px; height: 16px;" alt="ลบ"> ลบ
                             </button>
                         </td>
                     </tr>
@@ -1484,6 +1487,48 @@
             openLoanContractModal(id);
         }
 
+        function deleteLoanContract(id) {
+            Swal.fire({
+                title: 'ยืนยันการลบ',
+                text: 'คุณต้องการลบรายการสัญญายืมนี้หรือไม่?',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'ลบ',
+                cancelButtonText: 'ยกเลิก'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    showLoading();
+                    
+                    const params = new URLSearchParams();
+                    params.append('action', 'deleteLoanContract');
+                    params.append('id', id);
+
+                    fetch(API_URL, {
+                        method: 'POST',
+                        body: params
+                    })
+                    .then(response => response.json())
+                    .then(result => {
+                        if (result.success) {
+                            showSuccess('ลบข้อมูลเรียบร้อยแล้ว');
+                            loadAllData(); // โหลดข้อมูลใหม่ทั้งหมดหลังจากลบสำเร็จ
+                        } else {
+                            showError('เกิดข้อผิดพลาดในการลบข้อมูล: ' + (result.message || ''));
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        showError('เกิดข้อผิดพลาดในการเชื่อมต่อ');
+                    })
+                    .finally(() => {
+                        hideLoading();
+                    });
+                }
+            });
+        }
+
         // Repayment functions
         function displayRepayments() {
             const tbody = $('#repaymentTable');
@@ -1514,8 +1559,11 @@
                             <button class="btn btn-sm btn-primary me-1" onclick="viewDetail('บันทึกส่งใช้', '${item.id}')">
                                 <img src="https://lh3.googleusercontent.com/d/13qxaLbH33ivpbfIfrBmylnxINq1oOLFl" style="width: 16px; height: 16px;" alt="ดู"> ดู
                             </button>
-                            <button class="btn btn-sm btn-warning" onclick="editRepayment('${item.id}')">
+                            <button class="btn btn-sm btn-warning me-1" onclick="editRepayment('${item.id}')">
                                 <img src="https://lh3.googleusercontent.com/d/1FDhV-L1Y2xA0ik_TOFo5k1MDn-VaYSLy" style="width: 16px; height: 16px;" alt="แก้ไข"> แก้ไข
+                            </button>
+                            <button class="btn btn-sm btn-danger" onclick="deleteRepayment('${item.id}')">
+                                <img src="https://lh3.googleusercontent.com/d/1BF_5iwfRvYJ7QkUBIGWxoHk41ePRclri" style="width: 16px; height: 16px;" alt="ลบ"> ลบ
                             </button>
                         </td>
                     </tr>
@@ -1630,6 +1678,48 @@
 
         function editRepayment(id) {
             openRepaymentModal(id);
+        }
+
+        function deleteRepayment(id) {
+            Swal.fire({
+                title: 'ยืนยันการลบ',
+                text: 'คุณต้องการลบรายการส่งใช้นี้หรือไม่?',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'ลบ',
+                cancelButtonText: 'ยกเลิก'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    showLoading();
+                    
+                    const params = new URLSearchParams();
+                    params.append('action', 'deleteRepayment');
+                    params.append('id', id);
+
+                    fetch(API_URL, {
+                        method: 'POST',
+                        body: params
+                    })
+                    .then(response => response.json())
+                    .then(result => {
+                        if (result.success) {
+                            showSuccess('ลบข้อมูลเรียบร้อยแล้ว');
+                            loadAllData(); // โหลดข้อมูลใหม่ทั้งหมดหลังจากลบสำเร็จ
+                        } else {
+                            showError('เกิดข้อผิดพลาดในการลบข้อมูล: ' + (result.message || ''));
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        showError('เกิดข้อผิดพลาดในการเชื่อมต่อ');
+                    })
+                    .finally(() => {
+                        hideLoading();
+                    });
+                }
+            });
         }
 
         // Search functions
@@ -1902,5 +1992,5 @@
             }
         });
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'966de65e34ad2dd0',t:'MTc1MzgwNTU2OC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'966e18e7e45d7993',t:'MTc1MzgwNzYzOC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
